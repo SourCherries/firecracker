@@ -1,0 +1,6 @@
+*.pdf
+stack_plot.py
+example_covid.py
+example_temp.py
+sandbox_colormaps.py
+sandbox_overlay.py
