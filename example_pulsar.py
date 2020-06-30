@@ -40,9 +40,9 @@ plt.xlabel(xl_txt, fontdict=fontdict, labelpad=labelpad)
 # Show and print.
 plt.show()
 if layers:
-    file_end = "-layers.pdf"
+    file_end = "-layers.png"
 else:
-    file_end = ".pdf"
+    file_end = ".png"
 if fig is not None:
     fig.savefig("fig-pulsar" + file_end,
                 bbox_inches='tight')

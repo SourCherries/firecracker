@@ -36,7 +36,7 @@ xlim_global = [-900, 600]
 
 # --------------------------------------------------------------
 # Make figure.
-layers = False
+layers = True
 
 fig = firecracker(M, time=ms, label_colorbar="Voltage",
                   times_markers=event_a_ms, xlim_global=xlim_global,
@@ -52,9 +52,9 @@ plt.xlabel(xl_txt, fontdict=fontdict, labelpad=labelpad)
 # Show and print.
 plt.show()
 if layers:
-    file_end = "-layers.pdf"
+    file_end = "-layers.png"
 else:
-    file_end = ".pdf"
+    file_end = ".png"
 if fig is not None:
-    fig.savefig("fig-erp-S" + str(subject_id) + file_end,
+    fig.savefig("fig-erp" + file_end,
                 bbox_inches='tight')

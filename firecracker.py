@@ -13,7 +13,7 @@ from scipy import interpolate
 
 # Main and only function
 def firecracker(M, time, label_colorbar, labels_series=None,
-                times_markers=None, times_vert_lines=None, xlim_global=None,
+                times_markers=None, times_vert_lines=[], xlim_global=None,
                 y_range_type="min_to_max", y_scale="linear", layers=False,
                 upsample=1):
     """
@@ -80,7 +80,8 @@ def firecracker(M, time, label_colorbar, labels_series=None,
     # Linear interpolate to obtain greater sample of points.
     #   This module uses point-drawing to display color gradient.
     #   In some cases, large derivative causes points to be seen,
-    #   instead of a smooth line.
+    #   instead of a smooth line. In that case, let's interpolate
+    #   to give impression of line instead of points.
     if upsample > 1:
         inter_fun = interpolate.interp1d(time, M, axis=0)
         number_frames_fine = number_frames * upsample
@@ -96,15 +97,11 @@ def firecracker(M, time, label_colorbar, labels_series=None,
         CM = M
 
     # Display parameters.
-    FontSize = 16
+    FontSize = 12
     plt.rcParams.update({'font.size': FontSize})
-    f_height_inches = 8  # Window position and size.
+    f_height_inches = 7  # Window position and size.
     mult_y = 1.3  # Scalar to stretch y axis range
     mult_c = 1.0  # Scalar to stretch color range
-    if times_vert_lines is not None:
-        do_vertical_line = True
-    else:
-        do_vertical_line = False
 
     # Common scales for color gradients and y axes.
     if y_range_type is "symmetric_around_zero":
@@ -150,69 +147,6 @@ def firecracker(M, time, label_colorbar, labels_series=None,
     dms = mpl.rcParams['lines.markersize']
     mpl.rcParams['lines.markersize'] = nms
 
-    # # --------------------------------------------------------
-    # # REQUIRED VARIABLES FOR THIS SECTION:
-    # #   number_series, time, M, CM, cmap, clim_global, y_scale
-    # #   xlim_global, times_markers, event_color, labels_series
-    #
-    # # to do:
-    # #   make private functions for VANILLA & LAYERS (e.g., pulsar)
-    # #   dictionary argument to grab all parameters
-    #
-    # # Initial plot to determine appropriate x ticks based
-    # #   on Matplotlib defaults.
-    # fig, axs = plt.subplots(number_series, 1, sharex=True, sharey=True)
-    # fig.subplots_adjust(hspace=0)
-    # axs[0].scatter(time, M[:, 0], s=None, c=CM[:, 0], cmap=cmap,
-    #                vmin=clim_global[0], vmax=clim_global[1])
-    # axs[0].set_yscale(y_scale)
-    # axs[0].set_xlim(xlim_global[0], xlim_global[1])
-    # x_ticks = axs[0].get_xticks()
-    # plt.close(fig)
-    #
-    # # Plot each time series.
-    # #   Ensure appropriate ranges.
-    # #   Set spines to be invisible except for bottom spine for bottom series.
-    # fig, axs = plt.subplots(number_series, 1, sharex=False, sharey=False)
-    # fig.subplots_adjust(hspace=0)
-    # for i in range(number_series):
-    #     sp = axs[i].scatter(time, M[:, i], s=None, c=CM[:, i], cmap=cmap,
-    #                         vmin=clim_global[0], vmax=clim_global[1])
-    #     axs[i].set_yscale(y_scale)
-    #     if times_markers is not None:
-    #         mid_val = M[:, i].mean()
-    #         if times_markers[i] is not None:
-    #             e1 = axs[i].plot(times_markers[i], mid_val, '|', ms=14, mew=3,
-    #                              color=event_color)
-    #         else:
-    #             mid_pnt = int(len(time)/2)
-    #             e1 = axs[i].plot(time[mid_pnt], mid_val, '|', ms=14, mew=3,
-    #                              color=event_color)
-    #             eh = e1[0]
-    #             eh.set_visible(False)
-    #
-    #     axs[i].set_xlim(xlim_global[0], xlim_global[1])
-    #     axs[i].spines['left'].set_visible(False)
-    #     axs[i].spines['right'].set_visible(False)
-    #     axs[i].spines['bottom'].set_visible(False)
-    #     axs[i].spines['top'].set_visible(False)
-    #     axs[i].set_xticks([])
-    #     axs[i].set_yticks([])
-    #     if labels_series is not None:
-    #         if labels_series[i] is not None:
-    #             axs[i].set_ylabel(labels_series[i], rotation=0, labelpad=35)
-    #
-    # axs[-1].spines['bottom'].set_visible(True)
-    # axs[-1].set_xticks(x_ticks)
-    #
-    # # Ensure y-axis ranges are uniform and stretched out enough to fit data.
-    # for ax in axs:
-    #     ax.set_ylim(ylim_global)
-    #     ax.set_xlim(xlim_global)
-    #
-    # # RETURN VARIABLES:
-    # #   fig, sp, axs
-    # # --------------------------------------------------------------
     args = {}
     args['number_series'] = number_series
     args['time'] = time
@@ -226,27 +160,22 @@ def firecracker(M, time, label_colorbar, labels_series=None,
     args['times_markers'] = times_markers
     args['event_color'] = event_color
     args['labels_series'] = labels_series
+    args['times_vert_lines'] = times_vert_lines
 
     if layers:
         fig, sp, axs = _layers(args)
-        final_axis = axs
+        # final_axis = axs
     else:
         fig, sp, axs = _vanilla(args)
-        final_axis = axs[-1]
+        # final_axis = axs[-1]
 
     # Colorbar.
     fig.colorbar(sp, ax=axs, shrink=0.6, label=label_colorbar)
 
-    # Vertical line spanning sub plots.
-    if do_vertical_line:
-        for xv in times_vert_lines:
-            xarange = xlim_global[1] - xlim_global[0]
-            txp = (xv - xlim_global[0]) / xarange
-            final_axis.plot([txp, txp], [0, number_series], 'k--',
-                            transform=final_axis.transAxes,
-                            clip_on=False, ms=14, mew=3)
     # Sizing of figure and display.
     aspect_ratio = 1.76
+    if number_series > 25:
+        aspect_ratio = 1.2
     w_height_inches = f_height_inches * aspect_ratio
     fig.set_size_inches((w_height_inches, f_height_inches))
 
@@ -255,16 +184,7 @@ def firecracker(M, time, label_colorbar, labels_series=None,
     return fig
 
 
-# Helper function
-    # --------------------------------------------------------
-    # REQUIRED VARIABLES FOR THIS SECTION:
-    #   number_series, time, M, CM, cmap, clim_global, y_scale
-    #   xlim_global, times_markers, event_color, labels_series
-
-    # to do:
-    #   make private functions for VANILLA & LAYERS (e.g., pulsar)
-    #   dictionary argument to grab all parameters
-
+# Helper functions: _vanilla() and _layers()
 def _vanilla(args):
     number_series = args['number_series']
     time = args['time']
@@ -278,6 +198,7 @@ def _vanilla(args):
     times_markers = args['times_markers']
     event_color = args['event_color']
     labels_series = args['labels_series']
+    times_vert_lines = args['times_vert_lines']
 
     # Initial plot to determine appropriate x ticks based
     #   on Matplotlib defaults.
@@ -330,10 +251,15 @@ def _vanilla(args):
         ax.set_ylim(ylim_global)
         ax.set_xlim(xlim_global)
 
-    # RETURN VARIABLES:
-    #   fig, sp, axs
+    # Vertical line spanning sub plots.
+    for xv in times_vert_lines:
+        xarange = xlim_global[1] - xlim_global[0]
+        txp = (xv - xlim_global[0]) / xarange
+        ax.plot([txp, txp], [0, number_series], 'k--',
+                transform=ax.transAxes,
+                clip_on=False, ms=14, mew=3)
+
     return fig, sp, axs
-    # --------------------------------------------------------------
 
 
 def _layers(args):
@@ -343,12 +269,15 @@ def _layers(args):
     CM = args['CM']
     cmap = args['cmap']
     clim_global = args['clim_global']
-    y_scale = args['y_scale']
     xlim_global = args['xlim_global']
-    ylim_global = args['ylim_global']
     times_markers = args['times_markers']
     event_color = args['event_color']
     labels_series = args['labels_series']
+    times_vert_lines = args['times_vert_lines']
+
+    if labels_series is not None:
+        xr = xlim_global[1] - xlim_global[0]
+        xt = xlim_global[0] - 0.22 * xr
 
     bottom_y = M.min()
     y_spacing = 5
@@ -361,6 +290,30 @@ def _layers(args):
         sp = axs.scatter(time, M[:, i] + ys, s=None,
                          c=CM[:, i], cmap=cmap,
                          vmin=clim_global[0], vmax=clim_global[1])
-    # RETURN VARIABLES:
-    #   fig, sp, axs
+        if labels_series is not None:
+            if labels_series[i] is not None:
+                axs.text(xt, ys, s=labels_series[i])
+
+    axs.spines['left'].set_visible(False)
+    axs.spines['right'].set_visible(False)
+    axs.spines['top'].set_visible(False)
+    axs.set_yticks([])
+
+    if times_markers is not None:
+        for i, ys in enumerate(y_shifts):
+            mid_val = M[:, i].mean()
+            if times_markers[i] is not None:
+                e1 = axs.plot(times_markers[i], mid_val + ys, '|',
+                              ms=14, mew=3, color=event_color)
+            else:
+                mid_pnt = int(len(time)/2)
+                e1 = axs.plot(time[mid_pnt], mid_val + ys, '|',
+                              ms=14, mew=3, color=event_color)
+                eh = e1[0]
+                eh.set_visible(False)
+
+    # Vertical line spanning sub plots.
+    for xv in times_vert_lines:
+        axs.plot([xv, xv], sp.axes.get_ylim(), 'k--', ms=14, mew=3)
+
     return fig, sp, axs
