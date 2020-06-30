@@ -27,9 +27,7 @@ Using a `firecracker` plot to visualize our own ERP data, one can clearly see a 
     :alt: alternate text
     :figclass: align-center
 
-    This `firecracker` plot shows how our brain’s response to an event (dashed vertical line at time 0) can be influenced by our brain’s ongoing response to an earlier event (green ticks).
-    Across 14 conditions, we systematically varied the time between these pairs of events.
-    ERP are separated by condition in our figure, going from very short inter-event intervals at the top to very long intervals at the bottom.
+    This `firecracker` plot shows how our brain’s response to an event (dashed vertical line at time 0) can be influenced by our brain’s ongoing response to an earlier event (green ticks). Across 14 conditions, we systematically varied the time between these pairs of events. ERP are separated by condition in our figure, going from very short inter-event intervals at the top to very long intervals at the bottom.
 
 Example code and data is provided to recreate this figure:
 
