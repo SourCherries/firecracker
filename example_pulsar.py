@@ -4,30 +4,31 @@ from firecracker import firecracker
 
 import csv
 
-nf = 300  # time frames
-ns = 80   # series, pulsar number
-
-total_sec = 107
-series_ms = total_sec * 1000 / ns
-ms = np.linspace(0, series_ms, nf)
-
-pulsars = np.empty((nf, ns))
-with open('data/pulsar.csv') as csv_file:
+# Load a long time series of radio intensities
+total_samples = 24000
+ms = np.empty((total_samples,))         # milliseconds
+intensity = np.empty((total_samples,))  # radio intensity
+with open('data/pulsar_readable.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
+    headers = next(csv_reader)
     line_count = 0
     for row in csv_reader:
-        pulsars[:, line_count] = np.array([float(v) for v in list(row)])
+        ms[line_count] = float(list(row)[0])
+        intensity[line_count] = float(list(row)[1])
         line_count += 1
 
-# # Butterfly - spaghetti -  plot.
-# plt.plot(pulsars)
-# print([pulsars.min(), pulsars.max()])
+# Break this down into apparent periods (epochs)
+ne = 80                         # number of epochs
+nf = int(total_samples / ne)    # samples per epoch
+epochs = intensity.reshape((ne, nf))
+epochs = np.transpose(epochs)
+ms_epoch = ms[0:nf]
 
-# --------------------------------------------------------------
+
 # Firecracker figure.
-xlim_global = [0, series_ms]
+xlim_global = [0, ms_epoch[-1]]
 layers = True
-fig = firecracker(pulsars, time=ms, label_colorbar="Radio intensity",
+fig = firecracker(epochs, time=ms_epoch, label_colorbar="Radio intensity",
                   xlim_global=xlim_global, y_range_type="min_to_max",
                   upsample=4, layers=layers)
 
