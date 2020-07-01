@@ -55,7 +55,9 @@ Layers can be turned off. Simply change this parameter:
 Astrophysics example
 ====================
 
-The **layers** aesthetic was inspired by cover art for `Unknown Pleasures <https://en.wikipedia.org/wiki/Unknown_Pleasures>`_, by Joy Division.
+The **layers** aesthetic was inspired by cover art for `Unknown Pleasures <https://en.wikipedia.org/wiki/Unknown_Pleasures>`_, by Joy Division. That cover features plots of data from a 107-second recording of radio signal emitted by a rotating neutron star (pulsar).
+Data are shown in a stack of 80 time series, each covering the ~1.3 seconds it takes for the neutron star to fully turn. A flash accompanies each turn, but those flashes can look different each time. If the period of each plot matches the period of rotation then we should see a rough vertical alignment across this stack of plots.
+The **layers** aesthetic is beautiful but perhaps we can better judge the structure of flashes by using a `firecracker` figure.
 
 Here, we recreate the figure from that album cover but apply a colour gradient to each series:
 
