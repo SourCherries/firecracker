@@ -67,8 +67,6 @@ Here, we recreate the figure from that album cover but apply a colour gradient t
     :alt: alternate text
     :figclass: align-center
 
-    Here I say something about pulsars, of which I know nothing. Jon Snow.
-
 Example code and data is provided to recreate this figure:
 
 .. code:: bash
