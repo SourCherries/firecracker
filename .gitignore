@@ -4,3 +4,8 @@ example_covid.py
 example_temp.py
 sandbox_colormaps.py
 sandbox_overlay.py
+setup.cfg
+firecracker.egg-info/
+dist/
+build/
+__pycache__
