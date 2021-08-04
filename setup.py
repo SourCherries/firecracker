@@ -17,7 +17,7 @@ setuptools.setup(
     author_email="carl.michael.gaspar@icloud.com",
     url="https://github.com/SourCherries/firecracker",
     packages=setuptools.find_packages(),
-    install_requires=['numpy', 'matplotlib'],
+    install_requires=['numpy', 'matplotlib', 'scipy'],
     requires_python=">=3.6",
     classifiers=[
         "Intended Audience :: Academics",

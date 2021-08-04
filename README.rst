@@ -75,8 +75,9 @@ Example code and data is provided to recreate this figure:
 
 Prerequisites
 =============
-- numpy
 - matplotlib
+- numpy
+- scipy
 
 Setup
 =====
