@@ -79,15 +79,11 @@ Prerequisites
 - numpy
 - scipy
 
-Setup
+Citation
 =====
-Actually, I haven't decided the best way my users can make use of this minimal module. The following is simply a reminder to myself of how to format text for shell commands:
+If you use this code or are inspired by our data visualization method, we ask that you please cite the following paper:
 
-.. code:: bash
-
-    $ python setup.py install
-
-
+Luo, C., Chen, W., VanRullen, R., Zhang, Y., Gaspar, C.M. (accepted). Nudging the N170 forward with prior stimulation - Bridging the gap between N170 and recognition potential. Human Brain Mapping. DOI: 10.1002/(ISSN)1097-0193
 
 
 Licence
