@@ -83,7 +83,7 @@ Citation
 =====
 If you use this code or are inspired by our data visualization method, we ask that you please cite the following paper:
 
-> Luo, C., Chen, W., VanRullen, R., Zhang, Y., Gaspar, C.M. (accepted). Nudging the N170 forward with prior stimulation - Bridging the gap between N170 and recognition potential. Human Brain Mapping. DOI: 10.1002/(ISSN)1097-0193
+Luo, C., Chen, W., VanRullen, R., Zhang, Y., Gaspar, C.M. (accepted). Nudging the N170 forward with prior stimulation - Bridging the gap between N170 and recognition potential. Human Brain Mapping. DOI: 10.1002/(ISSN)1097-0193
 
 
 Licence
